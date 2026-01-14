@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.scroll-container');
     const slides = document.querySelectorAll('.slide');
     const navDots = document.querySelectorAll('.nav-dot');
+    const mainHeader = document.querySelector('.main-header'); // Selected entire header
     const logoContainer = document.getElementById('main-logo');
     const sideNav = document.querySelector('.side-nav');
 
@@ -15,8 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
+                entry.target.classList.add('visible'); // Trigger animation
                 const index = parseInt(entry.target.getAttribute('id').split('-')[1]);
                 updateUI(index, entry.target.classList.contains('dark'));
+            } else {
+                 entry.target.classList.remove('visible'); // Allow replay on scroll back
             }
         });
     }, observerOptions);
@@ -29,6 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update Dots active state
         navDots.forEach(dot => dot.classList.remove('active'));
         if(navDots[index]) navDots[index].classList.add('active');
+
+        // Hide header logo on final slide
+        if (index === slides.length - 1) {
+            mainHeader.classList.add('hidden');
+        } else {
+            mainHeader.classList.remove('hidden');
+        }
 
         // Update Logo Color
         if (isDark) {
